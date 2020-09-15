@@ -9,8 +9,11 @@ USER root
 
 # ffmpeg for matplotlib anim & dvipng for latex labels
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends ffmpeg dvipng && \
+    apt-get install -y --no-install-recommends ffmpeg dvipng libgd-dev && \
     rm -rf /var/lib/apt/lists/*
+
+RUN pip install jupyter-c-kernel
+RUN install_c_kernel --sys-prefix
 
 USER $NB_UID
 
@@ -76,7 +79,11 @@ RUN git clone https://github.com/PAIR-code/facets.git && \
 ENV XDG_CACHE_HOME="/home/${NB_USER}/.cache/"
 
 RUN MPLBACKEND=Agg python -c "import matplotlib.pyplot" && \
+
     fix-permissions "/home/${NB_USER}"
+
+
+
 
 USER $NB_UID
 
